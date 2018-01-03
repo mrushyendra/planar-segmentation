@@ -2,6 +2,7 @@
 #include "opencv2/ccalib/omnidir.hpp"
 #include "opencv2/xfeatures2d.hpp"
 #include "opencv2/optflow.hpp"
+#include "denseFlow.h"
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
