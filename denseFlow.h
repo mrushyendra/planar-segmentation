@@ -6,7 +6,7 @@
 #include "opencv2/xfeatures2d.hpp"
 #include "opencv2/optflow.hpp"
 
-double calcMedian(Mat data, Mat exclude, Mat mask);
+double calcMedian(cv::Mat data, cv::Mat exclude, cv::Mat mask);
 int denseFlow(char* videoFileName);
 
 #endif
