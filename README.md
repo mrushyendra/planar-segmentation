@@ -1,4 +1,4 @@
-# opticalFlow
+# planarSegmentation
 Given a top-down video from a moving vehicle, this program uses optical flow techniques to segment an image frame from the video into a ground portion and a moving/elevated portion. The user has 2 options - (i) using dense optical flow and (ii) sparse optical flow.
 
 ### (i) Dense Optical Flow
@@ -11,7 +11,7 @@ Flow vectors are calculated for the movement of each pixel between 2 successive 
 
 ### (ii) Sparse Optical Flow
 
-![Results of planar segmentation using sparse optical flow](results/opticalFlow1.png)
+![Results of planar segmentation using sparse optical flow](results/opticalFlow1.PNG)
 
 To speed up computation, optical flow is only calculated for a sparse grid of points using the Lucas Kanade method. The results are drawn onto the video frame, with pixels that have large displacement highlighted (i.e. pixels representing objects that lie above the ground plane).
 
