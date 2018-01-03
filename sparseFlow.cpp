@@ -1,3 +1,19 @@
+#include "opencv2/opencv.hpp"
+#include "opencv2/ccalib/omnidir.hpp"
+#include "opencv2/xfeatures2d.hpp"
+#include "opencv2/optflow.hpp"
+#include "sparseFlow.h"
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <iostream>
+#include <stdexcept>
+#include <algorithm>
+
+using namespace std;
+using namespace cv;
+using namespace cv::ml;
+
 /**
 	Calculates sparse optical flow - optical flow for a collection of points on an image frame from a video
 	Moving objects and tall objects should have a greater magnitude of optical flow
