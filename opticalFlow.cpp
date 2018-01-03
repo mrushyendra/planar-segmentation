@@ -13,10 +13,13 @@ using namespace std;
 using namespace cv;
 using namespace cv::ml;
 
+//calculate euclidean distance between any two points
 float euclideanDist(Point2f& p, Point2f& q) {
 	Point2f diff = p - q;
 	return cv::sqrt(diff.x*diff.x + diff.y*diff.y);
 }
+
+//Calculate the median pixel value in the given image, ignoring any pixels in Mat exclude and including pixels specified by Mat mask
 double calcMedian(Mat data, Mat exclude, Mat mask) {
 	double median = 0;
 	vector<float>dataVec;
@@ -45,8 +48,9 @@ double calcMedian(Mat data, Mat exclude, Mat mask) {
 int denseFlow();
 int sparseFlow();
 
+//usage: ./programName videoFileName
 int main(int argc, char** argv) {
-	denseFlow();
+	denseFlow(argv[1]);
 	return 0;
 }
 
@@ -54,19 +58,14 @@ int main(int argc, char** argv) {
 	Calculates dense optical flow between 2 video frames, for all pixels on the frame, .
 	Identifies outliers and draws them separately. Outliers are more likely to belong to tall objects because they don't move with a greater magnitude than pixels in the flat areas in the image
 */
-int denseFlow() {
-	VideoCapture vid("../data/videoSegmentation/generalSegmentation1TopDown.avi");
-
-	Mat frame;
-	for (int i = 0; i < 1500; ++i) { //fast forward 1500 frames
-		vid >> frame;
-	}
+int denseFlow(char* videoFileName) {
+	VideoCapture vid(videoFileName);
 
 	int frameCount = 0;
 	double magnitudeMedian = 0;
 	double angleMedian = 0;
-	while (true) {
-		
+	
+	while (true) {	
 		Mat prevLarge, nextLarge, prev, next, gap;
 		vid >> prevLarge; //get an image frame
 		for (int count = 0; count < 2; ++count) { //skip2 frames in between
@@ -96,13 +95,9 @@ int denseFlow() {
 		}
 		imshow("contours", mask);
 		waitKey(0);
-		//Mat rect(Size(75, 237), CV_8UC1, Scalar(0));
-		//rect.copyTo(mask(Rect(53, 66, 75, 237)));
+
 		Mat flow(prev.size(), CV_32FC2);
 		calcOpticalFlowFarneback(prev, next, flow, 0.5, 3, 15, 3, 7, 1.5, 0); //calculate the optical flow of pixels from 1 frame to the next
-		//Ptr<DenseOpticalFlow> denseOpticalFlowObj = createOptFlow_DualTVL1();
-		//denseOpticalFlowObj->calc(prev, next, flow);
-		//optflow::calcOpticalFlowSF(prev, next, flow, 5, 11, 20);
 
 		Mat flowXY[2];
 		split(flow, flowXY);
@@ -197,10 +192,11 @@ int denseFlow() {
 	Calculates sparse optical flow - optical flow for a collection of points on an image frame from a video
 	Moving objects and tall objects should have a greater magnitude of optical flow
 */
-int sparseFlow() {
-	VideoCapture vid("../data/dump3.avi");
+int sparseFlow(char* videoFileName) {
+	VideoCapture vid(videoFileName);
 	int maxImgNum = 1000;
-
+	
+	//skip ahead 50 frames
 	Mat frame;
 	for (int i = 0; i < 50; ++i) {
 		vid >> frame;
@@ -270,32 +266,6 @@ int sparseFlow() {
 				gridMat.at<uchar>(i, j) = saturate_cast<uchar>(80*(grid[((imgA.rows / 5)*i) + j].length));
 			}
 		}
-		/*
-		Mat rowGraph = Mat(gridMat.size()*5, gridMat.type(), Scalar::all(0));
-		for (int i = 0; i < gridMat.cols; ++i) {
-			line(rowGraph, Point2f(max((i-1),0) * 5, rowGraph.rows-gridMat.at<uchar>(30,max((i - 1), 0))), Point2f(i*5, rowGraph.rows - gridMat.at<uchar>(30,i)),Scalar(255));
-		}
-		imshow("lineGraph",rowGraph);
-		waitKey(0);
-
-		Mat colGraph = Mat(gridMat.size() * 5, gridMat.type(), Scalar::all(0));
-		for (int i = 0; i < gridMat.rows; ++i) {
-			line(colGraph, Point2f(max((i - 1), 0) * 5, colGraph.rows - gridMat.at<uchar>(max((i - 1), 0),30)), Point2f(i * 5, colGraph.rows - gridMat.at<uchar>(i,30)), Scalar(255));
-		}
-		imshow("lineGraph", colGraph);
-		waitKey(0);
-		
-		Canny(gridMat, gridMat, 100, 150, 3);
-		vector<vector<Point>> contours;
-		vector<Vec4i> hierarchy;
-		findContours(gridMat, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
-		for (size_t i = 0; i< contours.size(); i++)
-		{	
-			Scalar color = Scalar(255);
-			gridMat = Scalar::all(0);
-			drawContours(gridMat, contours, (int)i, color, 1, 8, hierarchy);
-		}
-		*/
 
 		imshow("keypoints", imgC);
 		waitKey(0);
