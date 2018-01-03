@@ -6,7 +6,7 @@
 #include "opencv2/xfeatures2d.hpp"
 #include "opencv2/optflow.hpp"
 
-float euclideanDist(Point2f& p, Point2f& q);
+float euclideanDist(cv::Point2f& p, cv::Point2f& q);
 int sparseFlow(char* videoFileName);
 
 #endif
