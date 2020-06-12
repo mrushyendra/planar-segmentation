@@ -1,5 +1,7 @@
-# planarSegmentation
+# Planar Segmentation
 Given a top-down video from a moving vehicle, this program uses optical flow techniques to segment an image frame from the video into a ground portion and a moving/elevated portion. The user has 2 options - (i) using dense optical flow and (ii) sparse optical flow.
+
+Note: The program aims to simply demonstrate the use of this technique. Use in production may require various modifications.
 
 ### (i) Dense Optical Flow
 
